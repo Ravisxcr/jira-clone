@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { M_PLUS_1 } from "next/font/google";
 import Link from "next/link";
 import { loginShema } from "../schemas";
+import { useLogin } from "../api/use-login";
 
 // const formSchema = z.object({
 //     email: z.string().trim().min(1, "Required").email(),
@@ -30,6 +31,8 @@ import { loginShema } from "../schemas";
 // })
 
 export const SignInCard = () => {
+
+    const { mutate } = useLogin();
     const form =  useForm<z.infer<typeof loginShema>>({
         resolver: zodResolver(loginShema),
         defaultValues: {
@@ -37,6 +40,10 @@ export const SignInCard = () => {
             password: "",
         }
     });
+
+    const onSubmit = (values: z.infer<typeof loginShema>) => {
+        mutate({ json: values });
+    }
 
     return (
         <Card className="w-full h-full md:w-[487px] border-none shadow-none">
@@ -82,7 +89,7 @@ export const SignInCard = () => {
                                 )}
                             />
  
-                        <Button disabled={false} size="lg" className="w-full">
+                        <Button disabled={false} size="lg" className="w-full" onClick={form.handleSubmit(onSubmit)}>
                             Login
                         </Button>
                     </form>
