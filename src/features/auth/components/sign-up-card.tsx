@@ -17,10 +17,12 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import Link from "next/link";
 import { registerSchema } from "../schemas";
+import { useRegister } from "../api/use-register";
 
 
 export const SignUpCard = () => {
 
+    const { mutate } = useRegister();
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues:{
@@ -31,7 +33,7 @@ export const SignUpCard = () => {
     });
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        console.log({values});
+        mutate({ json: values });
     }
     return (
         <Card className="w-full h-full md:w-[487px] border-none shadow-none">
