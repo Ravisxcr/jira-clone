@@ -9,6 +9,7 @@ import { sessionMiddleware } from "@/lib/session-middleware";
 
 type Variables = {
     user: any;
+    account?: any;
 };
 
 const app = new Hono<{ Variables: Variables }>()
@@ -57,17 +58,14 @@ const app = new Hono<{ Variables: Variables }>()
     return c.json({ data: user });
 })
 .post("/logout", sessionMiddleware, async (c) => {
-    const { account } = await createAppwriteClient();
-    try {
-        await account.deleteSession("current");
+    const account = c.get("account");
 
-        deleteCookie(c, AUTH_COOKIE);
-        await account.deleteSession("current");
-        return c.json({ message: "Logout successful" });
-    } catch (error) {
-        console.error(error);
-        return c.json({ error: "An unknown error occurred" }, 500);
-    }
+    deleteCookie(c, AUTH_COOKIE);
+    await account.deleteSession("current");
+
+    return c.json({
+        success: true,
+    });
 });
 
 export default app;

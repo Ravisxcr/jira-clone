@@ -22,7 +22,7 @@ import { useRegister } from "../api/use-register";
 
 export const SignUpCard = () => {
 
-    const { mutate } = useRegister();
+    const { mutate, isPending } = useRegister();
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues:{
@@ -66,6 +66,7 @@ export const SignUpCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="text"
                                             placeholder="Enter your Name"
                                         />
@@ -81,6 +82,7 @@ export const SignUpCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="email"
                                             placeholder="Enter email address"
                                         />
@@ -96,6 +98,7 @@ export const SignUpCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending} 
                                             type="password"
                                             placeholder="Enter password"
                                         />
@@ -103,7 +106,7 @@ export const SignUpCard = () => {
                                 </FormItem>
                             )}
                         />
-                    <Button type="submit" disabled={false} size="lg" className="w-full" onClick={form.handleSubmit(onSubmit)}>
+                    <Button type="submit" disabled={isPending} size="lg" className="w-full" onClick={form.handleSubmit(onSubmit)}>
                         Sign Up
                     </Button>
                 </form>
@@ -114,7 +117,7 @@ export const SignUpCard = () => {
             </div>
             <CardContent className="p-7 flex flex-row gap-x-3">
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
@@ -123,7 +126,7 @@ export const SignUpCard = () => {
                     Google Sign Up
                 </Button>
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
