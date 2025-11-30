@@ -1,3 +1,5 @@
+"use client";
+
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
@@ -23,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { M_PLUS_1 } from "next/font/google";
 import Link from "next/link";
 import { loginShema } from "../schemas";
+import { useLogin } from "../api/use-login";
 
 // const formSchema = z.object({
 //     email: z.string().trim().min(1, "Required").email(),
@@ -30,6 +33,8 @@ import { loginShema } from "../schemas";
 // })
 
 export const SignInCard = () => {
+
+    const { mutate, isPending } = useLogin();
     const form =  useForm<z.infer<typeof loginShema>>({
         resolver: zodResolver(loginShema),
         defaultValues: {
@@ -37,6 +42,10 @@ export const SignInCard = () => {
             password: "",
         }
     });
+
+    const onSubmit = (values: z.infer<typeof loginShema>) => {
+        mutate({ json: values });
+    }
 
     return (
         <Card className="w-full h-full md:w-[487px] border-none shadow-none">
@@ -59,6 +68,7 @@ export const SignInCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
+                                            disabled={isPending}
                                             type="email"
                                             placeholder="Enter email address"
                                         />
@@ -74,6 +84,7 @@ export const SignInCard = () => {
                                         <FormControl>
                                             <Input
                                                 {...field}
+                                                disabled={isPending}
                                                 type="password"
                                                 placeholder="Enter password"
                                             />
@@ -82,7 +93,7 @@ export const SignInCard = () => {
                                 )}
                             />
  
-                        <Button disabled={false} size="lg" className="w-full">
+                        <Button disabled={isPending} size="lg" className="w-full" onClick={form.handleSubmit(onSubmit)}>
                             Login
                         </Button>
                     </form>
@@ -93,7 +104,7 @@ export const SignInCard = () => {
             </div>
             <CardContent className="p-7 flex flex-row gap-x-3">
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
@@ -102,7 +113,7 @@ export const SignInCard = () => {
                      Google Login
                 </Button>
                 <Button
-                    disabled={false}
+                    disabled={isPending}
                     variant="secondary"
                     size="lg"
                     className="w-full"
